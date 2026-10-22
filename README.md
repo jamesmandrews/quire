@@ -110,8 +110,18 @@ marginal in silence.
    hold it against a label sheet. Nudge the offsets until the outlines sit
    on the labels. Offsets are saved **per stock**, since each one registers
    differently.
-2. Print the label PDF **at 100%**. Turn off *fit to page* and *shrink to
-   printable area* — any scaling throws every label out of register.
+2. Print the label PDF **at 100%**, on A4. Any scaling throws every label out
+   of register, and it is the single most common way this goes wrong.
+
+   In **macOS Preview** pick *Scale: 100%* — **not** *Scale to Fit*. Both of
+   its options resize the page: *Print Entire Image* shrinks to the printer's
+   printable area, around 96%, and *Fill Entire Paper* scales up and crops.
+   Elsewhere the setting is usually called *Actual size*; turn off *fit to
+   page* and *shrink to printable area*.
+
+   To check without wasting a sheet, use **PDF ▾ → Save as PDF** from the
+   print dialog and measure the result: the block of labels should span
+   exactly 198 mm across three columns.
 3. Feed each sheet once. A label sheet that goes through a laser printer
    twice can jam or shed adhesive.
 
