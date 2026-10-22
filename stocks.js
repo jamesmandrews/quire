@@ -44,7 +44,7 @@ const STOCKS = [
     gutter: { x: 0, y: 0 },
     verified: true,
     source: 'https://www.a-one.co.jp/product/search/detail.php?id=80321',
-    sourceNote: 'Sheet, label size and 3x8 layout are published; margins are not. Butt-cut is confirmed on the physical sheet, so the labels occupy exactly 198 x 271.2 mm and the remaining 12 mm across and 25.8 mm down is split evenly. A side-asymmetric die on sheet-fed stock would be peculiar, and both Avery A4 entries below are symmetric on each axis, so centring is taken as sound.',
+    sourceNote: 'Sheet, label size and 3x8 layout are published; margins are not. Derived by centring, then confirmed against a physical sheet on 2026-10-22: top and bottom both measured ~13 mm, matching 12.9, which also rules out a vertical gutter since any gap between rows would have shortened the bottom margin. Sides measured 6 and 5, within ruler error of the 6/6 the arithmetic forces (210 - 198 = 12).',
   },
   {
     id: 'avery-l7163',
