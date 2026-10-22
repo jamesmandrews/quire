@@ -1,0 +1,355 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Quire</title>
+<style>
+  :root {
+    --ground: #edefee;
+    --sheet:  #ffffff;
+    --panel:  #f7f8f8;
+    --ink:    #15181a;
+    --ink-2:  #666e72;
+    --ink-3:  #949b9e;
+    --rule:   #d6dbd9;
+    --guide:  #0a8fbf;
+    --guide-soft: #cfe9f3;
+    --caution:#a8491a;
+    --mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
+    --sans: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--ground);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 14px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ---- masthead ---- */
+  .masthead {
+    border-bottom: 1px solid var(--rule);
+    background: var(--sheet);
+    padding: 18px 24px 14px;
+  }
+  .masthead-title {
+    margin: 0;
+    font-size: 17px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+  .spec-strip {
+    margin-top: 6px;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-2);
+  }
+  .spec-strip span { color: var(--ink-3); padding: 0 6px; }
+
+  /* ---- shell ---- */
+  .shell {
+    display: grid;
+    grid-template-columns: 340px minmax(0, 1fr);
+    gap: 28px;
+    align-items: start;
+    padding: 28px 24px 64px;
+    max-width: 1180px;
+    margin: 0 auto;
+  }
+  @media (max-width: 900px) {
+    .shell { grid-template-columns: minmax(0, 1fr); }
+  }
+
+  /* ---- controls ---- */
+  .controls {
+    background: var(--sheet);
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+  }
+  .fieldset {
+    border: 0;
+    margin: 0;
+    padding: 18px 18px 20px;
+    border-bottom: 1px solid var(--rule);
+  }
+  .fieldset:last-of-type { border-bottom: 0; }
+  .legend {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    margin-bottom: 14px;
+  }
+
+  .field { margin-bottom: 14px; }
+  .field:last-child { margin-bottom: 0; }
+  .field-label {
+    display: block;
+    font-size: 13px;
+    font-weight: 500;
+    margin-bottom: 5px;
+  }
+  .field-optional {
+    font-weight: 400;
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    margin-left: 4px;
+  }
+  .field-note {
+    font-size: 12px;
+    color: var(--ink-2);
+    margin-top: 5px;
+    line-height: 1.4;
+  }
+
+  .input, .select {
+    width: 100%;
+    font-family: var(--mono);
+    font-size: 14px;
+    color: var(--ink);
+    background: var(--sheet);
+    border: 1px solid var(--rule);
+    border-radius: 2px;
+    padding: 7px 9px;
+  }
+  .input:focus-visible, .select:focus-visible,
+  .btn:focus-visible, .check-input:focus-visible {
+    outline: 2px solid var(--guide);
+    outline-offset: 1px;
+  }
+
+  .pair { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+  .check { display: flex; align-items: flex-start; gap: 9px; }
+  .check-input { margin: 3px 0 0; accent-color: var(--guide); }
+  .check-text { font-size: 13px; }
+
+  .nudge { display: flex; gap: 6px; margin-top: 10px; }
+  .btn {
+    font-family: var(--sans);
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--ink);
+    background: var(--panel);
+    border: 1px solid var(--rule);
+    border-radius: 2px;
+    padding: 8px 12px;
+    cursor: pointer;
+  }
+  .btn:hover { background: #eceeee; }
+  .btn-mono { font-family: var(--mono); font-size: 12px; padding: 6px 10px; }
+  .btn-wide { width: 100%; }
+  .btn-primary {
+    background: var(--guide);
+    border-color: var(--guide);
+    color: #fff;
+    font-weight: 600;
+    padding: 11px 12px;
+  }
+  .btn-primary:hover { background: #087ba5; }
+
+  .actions { display: flex; flex-direction: column; gap: 9px; }
+
+  .readout {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--ink-2);
+    background: var(--panel);
+    border: 1px solid var(--rule);
+    border-radius: 2px;
+    padding: 9px 10px;
+    margin-bottom: 14px;
+  }
+  .readout-row { display: flex; justify-content: space-between; }
+  .readout-row + .readout-row { margin-top: 3px; }
+  .readout-value { color: var(--ink); }
+
+  .readout-warn { color: var(--caution); }
+
+  .caution {
+    font-size: 12px;
+    line-height: 1.5;
+    color: var(--caution);
+    border-left: 2px solid var(--caution);
+    padding-left: 10px;
+  }
+
+  /* ---- preview ---- */
+  .preview { min-width: 0; }
+  .preview-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 12px;
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+  .sheet-frame {
+    background: var(--sheet);
+    border: 1px solid var(--rule);
+    box-shadow: 0 1px 2px rgba(0,0,0,.04), 0 8px 24px rgba(0,0,0,.05);
+    border-radius: 1px;
+  }
+  .sheet-svg { display: block; width: 100%; height: auto; }
+
+  .legend-key {
+    display: flex;
+    gap: 18px;
+    flex-wrap: wrap;
+    margin-top: 12px;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--ink-2);
+  }
+  .key { display: flex; align-items: center; gap: 6px; }
+  .key-swatch { width: 14px; height: 2px; background: var(--guide); }
+  .key-swatch-ink { background: var(--ink); }
+  .key-swatch-rule { background: var(--rule); height: 1px; }
+</style>
+</head>
+<body>
+
+<header class="masthead">
+  <h1 class="masthead-title">Quire</h1>
+  <p class="spec-strip" id="spec-strip">A-One 80321<span>/</span>A4<span>/</span>3 &times; 8 = 24 per sheet<span>/</span>66 &times; 33.9 mm</p>
+</header>
+
+<main class="shell">
+
+  <form class="controls" id="controls" autocomplete="off">
+
+    <fieldset class="fieldset">
+      <div class="legend">Label stock</div>
+
+      <div class="field">
+        <label class="field-label" for="stock">Sheet</label>
+        <select class="select" id="stock" aria-describedby="stock-note"></select>
+        <p class="field-note" id="stock-note"></p>
+      </div>
+    </fieldset>
+
+    <fieldset class="fieldset">
+      <div class="legend">Batch</div>
+
+      <div class="field">
+        <label class="field-label" for="sheets">Sheets</label>
+        <input class="input" type="number" id="sheets" value="1" min="1" max="100" step="1">
+        <p class="field-note" id="count-note">&mdash;</p>
+      </div>
+
+      <div class="field">
+        <label class="field-label" for="prefix">Prefix <span class="field-optional">optional</span></label>
+        <input class="input" type="text" id="prefix" maxlength="20" placeholder="none"
+               spellcheck="false" autocapitalize="characters" aria-describedby="prefix-note">
+        <p class="field-note" id="prefix-note">Letters and digits, up to 5. Goes in front of every ID on the sheet.</p>
+      </div>
+
+      <div class="field">
+        <label class="field-label" for="eclevel">Error correction</label>
+        <select class="select" id="eclevel">
+          <option value="Q" selected>Q — recovers from 25% damage</option>
+          <option value="H">H — recovers from 30% damage</option>
+        </select>
+        <p class="field-note">Q is free for a bare ID. H survives more damage and, with a prefix, may need a larger code &mdash; watch the QR readout.</p>
+      </div>
+
+      <button class="btn btn-wide btn-mono" type="button" id="reroll">Draw new IDs</button>
+    </fieldset>
+
+    <fieldset class="fieldset">
+      <div class="legend">Label</div>
+      <div class="field">
+        <div class="check">
+          <input class="check-input" type="checkbox" id="rules" checked>
+          <label class="check-text" for="rules">Print ruling lines in the write area</label>
+        </div>
+      </div>
+    </fieldset>
+
+    <fieldset class="fieldset">
+      <div class="legend">Printer alignment</div>
+
+      <div class="field">
+        <div class="pair">
+          <div>
+            <label class="field-label" for="offx">Shift right (mm)</label>
+            <input class="input" type="number" id="offx" value="0" step="0.1" min="-8" max="8">
+          </div>
+          <div>
+            <label class="field-label" for="offy">Shift down (mm)</label>
+            <input class="input" type="number" id="offy" value="0" step="0.1" min="-8" max="8">
+          </div>
+        </div>
+        <div class="nudge">
+          <button class="btn btn-mono" type="button" data-nudge="x:-0.5">&larr; 0.5</button>
+          <button class="btn btn-mono" type="button" data-nudge="x:0.5">0.5 &rarr;</button>
+          <button class="btn btn-mono" type="button" data-nudge="y:-0.5">&uarr; 0.5</button>
+          <button class="btn btn-mono" type="button" data-nudge="y:0.5">0.5 &darr;</button>
+          <button class="btn btn-mono" type="button" id="reset-offset">0</button>
+        </div>
+        <p class="field-note">Print the test sheet on plain paper, hold it against a label sheet, then dial in the gap. Saved in this browser.</p>
+      </div>
+    </fieldset>
+
+    <fieldset class="fieldset">
+      <div class="legend">Output</div>
+
+      <div class="readout">
+        <div class="readout-row"><span>Page</span><span class="readout-value" id="page-readout">&mdash;</span></div>
+        <div class="readout-row"><span>Margins</span><span class="readout-value" id="margin-readout">&mdash;</span></div>
+        <div class="readout-row"><span>QR</span><span class="readout-value" id="qr-readout">&mdash;</span></div>
+        <div class="readout-row"><span>ID</span><span class="readout-value" id="id-readout">&mdash;</span></div>
+      </div>
+
+      <p class="caution" id="module-warning" hidden>Under 0.9 mm per module. It will still scan, but hold the phone closer and keep the label clean. Dropping the prefix or using error correction Q buys the module size back.</p>
+
+      <div class="actions">
+        <button class="btn btn-primary btn-wide" type="button" id="make-labels">Save label PDF</button>
+        <button class="btn btn-wide" type="button" id="make-test">Save alignment test PDF</button>
+        <button class="btn btn-wide" type="button" id="make-manifest">Save manifest JSON</button>
+      </div>
+    </fieldset>
+
+    <fieldset class="fieldset">
+      <p class="caution">Print at 100%. Turn off &ldquo;fit to page&rdquo; and &ldquo;shrink to printable area&rdquo; &mdash; any scaling throws every label on the sheet out of register. Feed each sheet once; a label sheet that goes through a laser printer twice can jam or shed adhesive.</p>
+    </fieldset>
+
+  </form>
+
+  <section class="preview">
+    <div class="preview-bar">
+      <span id="preview-sheet">Sheet 1 &mdash; actual proportions</span>
+      <span id="preview-offset">offset 0.0, 0.0</span>
+    </div>
+    <div class="sheet-frame">
+      <svg class="sheet-svg" id="sheet" viewBox="0 0 210 297" role="img" aria-label="Preview of one sheet of labels"></svg>
+    </div>
+    <div class="legend-key">
+      <span class="key"><i class="key-swatch key-swatch-ink"></i> prints black</span>
+      <span class="key"><i class="key-swatch key-swatch-rule"></i> prints light gray</span>
+      <span class="key"><i class="key-swatch"></i> guide only &mdash; never printed</span>
+    </div>
+  </section>
+
+</main>
+
+<script src="vendor/qrcode-generator.js"></script>
+<script src="vendor/pdf-lib.min.js"></script>
+<script src="stocks.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
